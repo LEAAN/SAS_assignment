@@ -1,0 +1,21 @@
+LIBNAME SASDATA '/folders/myfolders/';
+DATA MYDATA;
+	SET SASDATA.assignment1;
+RUN;
+* Obtain descriptive statistics;
+proc means data = mydata; 
+	class BATCH RUN; 
+	var OUTCOME;
+run;
+* Wilcoxon rank sum test;
+data mydataW;
+	set mydata;
+	if batch ^= "B0" and batch ^="B1"
+		then delete;
+	keep batch outcome;
+run;
+PROC NPAR1WAY DATA=mydataW;
+	CLASS BATCH;
+	VAR outcome;
+	EXACT WILCOXON; 
+RUN;
